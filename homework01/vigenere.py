@@ -14,13 +14,13 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
 
     for char in plaintext:
         key_char = keyword[key_index % key_length].lower()
-        shift = ord(key_char) - ord('a')
+        shift = ord(key_char) - ord("a")
 
         if char.isalpha():
             if char.isupper():
-                new_char = chr((ord(char) - ord('A') + shift) % 26 + ord('A'))
+                new_char = chr((ord(char) - ord("A") + shift) % 26 + ord("A"))
             else:
-                new_char = chr((ord(char) - ord('a') + shift) % 26 + ord('a'))
+                new_char = chr((ord(char) - ord("a") + shift) % 26 + ord("a"))
             ciphertext += new_char
         else:
             # Неалфавитный символ - копируем без изменения
@@ -48,13 +48,13 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
 
     for char in ciphertext:
         key_char = keyword[key_index % key_length].lower()
-        shift = ord(key_char) - ord('a')
+        shift = ord(key_char) - ord("a")
 
         if char.isalpha():
             if char.isupper():
-                new_char = chr((ord(char) - ord('A') - shift) % 26 + ord('A'))
+                new_char = chr((ord(char) - ord("A") - shift) % 26 + ord("A"))
             else:
-                new_char = chr((ord(char) - ord('a') - shift) % 26 + ord('a'))
+                new_char = chr((ord(char) - ord("a") - shift) % 26 + ord("a"))
             plaintext += new_char
         else:
             # Неалфавитный символ - копируем без изменения
