@@ -100,7 +100,10 @@ def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[in
     d = multiplicative_inverse(e, phi)
 
     # Return public and private keypair
-    # Public key is (e, n) and private key is (d, n)
+    # Public key is (e, n) and private ke
+    #
+    #
+    # y is (d, n)
     return ((e, n), (d, n))
 
 
