@@ -1,12 +1,13 @@
 import tkinter as tk
-from copy import deepcopy
-from tkinter import ttk
-from typing import List
+from tkinter import messagebox, ttk
+from typing import List, Union
 
-from maze import add_path_to_grid, bin_tree_maze, solve_maze
+from maze import add_path_to_grid, bin_tree_maze, encircled_exit, get_exits, solve_maze
 
 
+# pylint: disable=possibly-used-before-assignment
 def draw_cell(x, y, color, size: int = 10):
+    """Draws a single cell"""
     x *= size
     y *= size
     x1 = x + size
@@ -14,30 +15,28 @@ def draw_cell(x, y, color, size: int = 10):
     canvas.create_rectangle(x, y, x1, y1, fill=color)
 
 
-def draw_maze(grid: List[List[str | int]], size: int = 10):
+# pylint: disable=possibly-used-before-assignment
+def draw_maze(grid: List[List[Union[str, int]]], size: int = 10):
+    """Draws a cell field based on grid"""
     for x, row in enumerate(grid):
         for y, cell in enumerate(row):
-            if cell == " ":
+            if cell in (" ", 0):
                 color = "White"
             elif cell == "■":
                 color = "black"
             elif cell == "X":
-                color = "red"
+                color = "teal"
             draw_cell(y, x, color, size)
 
 
 def show_solution():
-    new_grid = deepcopy(GRID)
-    new_grid, path = solve_maze(new_grid)
-    maze = add_path_to_grid(new_grid, path)
-    draw_maze(maze, CELL_SIZE)
-
-
-def solvable_maze(grid: List[List[str | int]]) -> bool:
-    """Checking if the maze is solvable"""
-    new_grid = deepcopy(grid)
-    _, path = solve_maze(new_grid)
-    return bool(path)
+    """Display the found solution on the canvas"""
+    maze, path = solve_maze(GRID)
+    maze = add_path_to_grid(GRID, path)
+    if path:
+        draw_maze(maze, CELL_SIZE)
+    else:
+        messagebox.showinfo("Message", "No solutions")
 
 
 if __name__ == "__main__":
@@ -46,11 +45,9 @@ if __name__ == "__main__":
 
     CELL_SIZE = 10
     GRID = bin_tree_maze(N, M)
-    if not solvable_maze(GRID):
-        print("Maze is not solvable, so let's regenerate it")
-        GRID = bin_tree_maze(N, M)
 
-    print("Maze is solvable")
+    while any(encircled_exit(GRID, e) for e in get_exits(GRID)):
+        GRID = bin_tree_maze(N, M)
 
     window = tk.Tk()
     window.title("Maze")
